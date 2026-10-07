@@ -60,11 +60,11 @@ export default function WorkshopPage() {
 
   const disabledReason =
     hats.length === 0
-      ? "Selecciona al menos un sombrero"
+      ? "Select at least one hat"
       : mode === "text" && text.trim().length < 10
-        ? "Escribe la idea (mín. 10 caracteres)"
+        ? "Write the idea (min. 10 characters)"
         : mode === "image" && !image
-          ? "Añade una foto del tablero"
+          ? "Add a photo of the board"
           : null;
 
   const analyze = useCallback(async () => {
@@ -102,7 +102,7 @@ export default function WorkshopPage() {
           });
           return;
         }
-        setError(apiError?.message ?? `Error inesperado (${res.status}). Inténtalo de nuevo.`);
+        setError(apiError?.message ?? `Unexpected error (${res.status}). Please try again.`);
         return;
       }
 
@@ -111,7 +111,7 @@ export default function WorkshopPage() {
       requestAnimationFrame(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
-      setError("No se pudo contactar con el servidor. Revisa tu conexión.");
+      setError("Could not reach the server. Check your connection.");
     } finally {
       if (abortRef.current === controller) {
         setLoading(false);
@@ -135,14 +135,14 @@ export default function WorkshopPage() {
         >
           <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-xs text-zinc-400">
             <Sparkles className="h-3.5 w-3.5 text-purple-400" aria-hidden />
-            Taller de estrategia · Respuesta en ~2s
+            Strategy workshop · ~2s response
           </p>
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Pon tu idea contra las cuerdas.
+            Put your idea under pressure.
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-zinc-400">
-            Fotografía el tablero o escribe la propuesta. Cada sombrero devuelve un punto ciego, una hipótesis fatal, dos
-            preguntas incómodas y la señal que indicaría pivotar.
+            Snap the board or type the proposal. Each hat returns a blind spot, a fatal hypothesis, two uncomfortable
+            questions and the signal that would call for a pivot.
           </p>
         </motion.div>
 
@@ -162,7 +162,7 @@ export default function WorkshopPage() {
           <div className="flex flex-col gap-5">
             <LensSelector selected={hats} onChange={setHats} disabled={loading} />
 
-            {/* Botón de análisis (escritorio) */}
+            {/* Analyze button (desktop) */}
             <AnalyzeButton
               className="hidden lg:flex"
               onClick={analyze}
@@ -190,7 +190,7 @@ export default function WorkshopPage() {
                 type="button"
                 onClick={() => setError(null)}
                 className="focus-ring rounded p-1 text-amber-300 hover:text-white"
-                aria-label="Cerrar aviso"
+                aria-label="Dismiss notice"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -218,7 +218,7 @@ export default function WorkshopPage() {
         </div>
       </main>
 
-      {/* Barra de acción fija (móvil / tablet) */}
+      {/* Sticky action bar (mobile / tablet) */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/[0.06] bg-zinc-950/85 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 backdrop-blur-xl lg:hidden">
         <AnalyzeButton
           onClick={analyze}
@@ -269,7 +269,7 @@ function AnalyzeButton({
         style={disabled ? undefined : { boxShadow: `0 0 0 1px ${accent}, 0 12px 40px -8px ${accent}99` }}
       >
         <Sparkles className={cn("h-5 w-5", loading && "animate-spin")} aria-hidden />
-        {loading ? "Desafiando…" : `Desafiar idea${count > 1 ? ` · ${count} sombreros` : ""}`}
+        {loading ? "Challenging…" : `Challenge idea${count > 1 ? ` · ${count} hats` : ""}`}
       </motion.button>
       {hint && !loading && <p className="text-center text-xs text-zinc-500">{hint}</p>}
     </div>

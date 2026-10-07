@@ -12,9 +12,9 @@ interface HeaderProps {
 }
 
 const STATUS_COPY: Record<ConnectionStatus, { label: string; dot: string; text: string }> = {
-  checking: { label: "Verificando…", dot: "bg-zinc-400 animate-pulse", text: "text-zinc-400" },
-  online: { label: "Groq conectado", dot: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]", text: "text-emerald-300" },
-  missing: { label: "Falta API Key", dot: "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.9)]", text: "text-rose-300" },
+  checking: { label: "Checking…", dot: "bg-zinc-400 animate-pulse", text: "text-zinc-400" },
+  online: { label: "Groq connected", dot: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]", text: "text-emerald-300" },
+  missing: { label: "API key missing", dot: "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.9)]", text: "text-rose-300" },
 };
 
 export function Header({ status, onStatusClick }: HeaderProps) {
@@ -30,7 +30,7 @@ export function Header({ status, onStatusClick }: HeaderProps) {
           </div>
           <div className="leading-tight">
             <h1 className="text-base font-semibold tracking-tight text-white sm:text-lg">AI Challenger</h1>
-            <p className="hidden text-xs text-zinc-500 sm:block">Desafía tu estrategia en segundos</p>
+            <p className="hidden text-xs text-zinc-500 sm:block">Stress-test your strategy in seconds</p>
           </div>
         </div>
 

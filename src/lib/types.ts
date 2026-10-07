@@ -1,6 +1,6 @@
 /**
- * Tipos compartidos entre cliente y servidor.
- * Este archivo NO debe contener secretos ni lógica de servidor.
+ * Types shared between client and server.
+ * This file must NOT contain secrets or server logic.
  */
 
 export type InputMode = "text" | "image";
@@ -9,22 +9,22 @@ export type HatId = "cynic" | "scaler" | "client" | "operator";
 
 export const HAT_IDS: readonly HatId[] = ["cynic", "scaler", "client", "operator"] as const;
 
-/** Estructura JSON que el modelo debe devolver para cada sombrero. */
+/** JSON structure the model must return for each hat. */
 export interface ChallengeResponse {
   blindspot: string;
   fatalHypothesis: string;
-  /** Exactamente 2 preguntas. */
+  /** Exactly 2 questions. */
   uncomfortableQuestions: [string, string];
   pivotSignal: string;
 }
 
-/** Payload que el cliente envía a /api/challenge. */
+/** Payload the client sends to /api/challenge. */
 export interface ChallengeRequest {
   mode: InputMode;
   hats: HatId[];
-  /** Texto de la idea (mode === "text") o contexto opcional (mode === "image"). */
+  /** Idea text (mode === "text") or optional context (mode === "image"). */
   text?: string;
-  /** Data URL Base64 de la imagen (mode === "image"). */
+  /** Base64 data URL of the image (mode === "image"). */
   image?: string;
 }
 
@@ -65,15 +65,15 @@ export interface ChallengeApiError {
   };
 }
 
-/** Límites compartidos para validar antes de enviar y en el servidor. */
+/** Shared limits, validated before sending and on the server. */
 export const LIMITS = {
   maxTextChars: 4000,
-  /** Tamaño máximo del data URL Base64 (Groq acepta hasta ~4 MB en base64). */
+  /** Max Base64 data URL size (Groq accepts up to ~4 MB in base64). */
   maxImageDataUrlBytes: 3_800_000,
   maxImageDimension: 1600,
 } as const;
 
-/** Type guard para validar la respuesta del modelo. */
+/** Type guard that validates the model response. */
 export function isChallengeResponse(value: unknown): value is ChallengeResponse {
   if (typeof value !== "object" || value === null) return false;
   const v = value as Record<string, unknown>;

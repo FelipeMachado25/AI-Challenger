@@ -10,19 +10,19 @@ function loadImage(file: File): Promise<HTMLImageElement> {
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error("No se pudo leer la imagen. Prueba con JPG o PNG."));
+      reject(new Error("Could not read the image. Try JPG or PNG."));
     };
     img.src = url;
   });
 }
 
 /**
- * Redimensiona y comprime una imagen en el navegador a JPEG Base64 (data URL),
- * reduciendo la calidad progresivamente hasta quedar bajo el límite de Groq.
+ * Resizes and compresses an image in the browser to a Base64 JPEG (data URL),
+ * lowering quality progressively until it fits under Groq's limit.
  */
 export async function compressImage(file: File): Promise<string> {
   if (!file.type.startsWith("image/")) {
-    throw new Error("El archivo seleccionado no es una imagen.");
+    throw new Error("The selected file is not an image.");
   }
 
   const img = await loadImage(file);
@@ -33,20 +33,20 @@ export async function compressImage(file: File): Promise<string> {
 
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Tu navegador no soporta compresión de imágenes.");
+  if (!ctx) throw new Error("Your browser does not support image compression.");
 
   let quality = 0.85;
   for (let i = 0; i < 8; i++) {
     canvas.width = width;
     canvas.height = height;
-    // Fondo blanco para imágenes con transparencia (los post-its se leen mejor).
+    // White background for transparent images (sticky notes read better).
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
     ctx.imageSmoothingQuality = "high";
     ctx.drawImage(img, 0, 0, width, height);
 
     const dataUrl = canvas.toDataURL("image/jpeg", quality);
-    // Objetivo holgado (~1.5 MB) para respuestas rápidas.
+    // Comfortable target (~1.5 MB) for fast responses.
     if (dataUrl.length <= Math.min(LIMITS.maxImageDataUrlBytes, 1_500_000)) return dataUrl;
 
     if (quality > 0.55) {
@@ -56,7 +56,7 @@ export async function compressImage(file: File): Promise<string> {
       height = Math.round(height * 0.8);
     }
   }
-  throw new Error("La imagen es demasiado pesada incluso tras comprimirla.");
+  throw new Error("The image is too heavy even after compression.");
 }
 
 export function dataUrlSizeKb(dataUrl: string): number {

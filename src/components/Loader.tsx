@@ -10,7 +10,7 @@ interface LoaderProps {
   hats: HatId[];
 }
 
-const PHASES = ["Leyendo la idea…", "Aplicando los visores…", "Buscando puntos ciegos…", "Formulando preguntas incómodas…"];
+const PHASES = ["Reading the idea…", "Applying the lenses…", "Hunting for blind spots…", "Drafting uncomfortable questions…"];
 
 export function Loader({ hats }: LoaderProps) {
   const [elapsed, setElapsed] = useState(0);
@@ -42,7 +42,7 @@ export function Loader({ hats }: LoaderProps) {
         <p className="shimmer-text text-lg font-semibold">{phase}</p>
         <p className="font-mono text-xs text-zinc-500">{(elapsed / 1000).toFixed(1)}s · Groq LPU</p>
       </div>
-      <span className="sr-only">Analizando con {hats.length} sombreros</span>
+      <span className="sr-only">Analyzing with {hats.length} hats</span>
     </div>
   );
 }

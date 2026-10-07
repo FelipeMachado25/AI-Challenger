@@ -23,14 +23,14 @@ interface InputSectionProps {
 }
 
 const EXAMPLES = [
-  "Lanzar una app de suscripción mensual para que pymes gestionen sus facturas con IA.",
-  "Convertir nuestras sucursales bancarias en espacios de coworking con asesoría financiera.",
-  "Un marketplace B2B para que restaurantes compren excedentes de alimentos a productores locales.",
+  "Launch a monthly subscription app that lets small businesses manage their invoices with AI.",
+  "Turn our bank branches into coworking spaces with financial advisory services.",
+  "A B2B marketplace where restaurants buy surplus food from local producers.",
 ];
 
 const TABS: { id: InputMode; label: string; icon: typeof Camera }[] = [
-  { id: "image", label: "Foto del tablero", icon: Camera },
-  { id: "text", label: "Texto rápido", icon: PenLine },
+  { id: "image", label: "Board photo", icon: Camera },
+  { id: "text", label: "Quick text", icon: PenLine },
 ];
 
 export function InputSection({
@@ -60,7 +60,7 @@ export function InputSection({
         const dataUrl = await compressImage(file);
         onImageChange(dataUrl);
       } catch (error) {
-        setImageError(error instanceof Error ? error.message : "No se pudo procesar la imagen.");
+        setImageError(error instanceof Error ? error.message : "Could not process the image.");
       } finally {
         setProcessing(false);
       }
@@ -86,12 +86,12 @@ export function InputSection({
     <section className="panel p-4 sm:p-6" aria-labelledby="input-title">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 id="input-title" className="text-sm font-semibold uppercase tracking-[0.14em] text-zinc-400">
-          1 · Captura la idea
+          1 · Capture the idea
         </h2>
       </div>
 
       {/* Tabs */}
-      <div role="tablist" aria-label="Modo de entrada" className="relative mb-5 grid grid-cols-2 rounded-xl border border-white/[0.06] bg-black/40 p-1">
+      <div role="tablist" aria-label="Input mode" className="relative mb-5 grid grid-cols-2 rounded-xl border border-white/[0.06] bg-black/40 p-1">
         {TABS.map(({ id, label, icon: Icon }) => {
           const active = mode === id;
           return (
@@ -157,7 +157,7 @@ export function InputSection({
               <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black">
                 <Image
                   src={image}
-                  alt="Vista previa del tablero"
+                  alt="Board preview"
                   width={1600}
                   height={1200}
                   unoptimized
@@ -174,16 +174,16 @@ export function InputSection({
                       onClick={() => cameraRef.current?.click()}
                       className="focus-ring flex min-h-[40px] items-center gap-1.5 rounded-lg bg-white/10 px-3 text-xs font-medium text-white backdrop-blur transition hover:bg-white/20"
                     >
-                      <Camera className="h-3.5 w-3.5" /> Otra
+                      <Camera className="h-3.5 w-3.5" /> Retake
                     </button>
                     <button
                       type="button"
                       disabled={disabled}
                       onClick={() => onImageChange(null)}
                       className="focus-ring flex min-h-[40px] items-center gap-1.5 rounded-lg bg-rose-500/20 px-3 text-xs font-medium text-rose-200 backdrop-blur transition hover:bg-rose-500/30"
-                      aria-label="Quitar imagen"
+                      aria-label="Remove image"
                     >
-                      <Trash2 className="h-3.5 w-3.5" /> Quitar
+                      <Trash2 className="h-3.5 w-3.5" /> Remove
                     </button>
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export function InputSection({
                 {processing ? (
                   <>
                     <Loader2 className="h-8 w-8 animate-spin text-zinc-400" aria-hidden />
-                    <p className="text-sm text-zinc-400">Comprimiendo imagen…</p>
+                    <p className="text-sm text-zinc-400">Compressing image…</p>
                   </>
                 ) : (
                   <>
@@ -212,8 +212,8 @@ export function InputSection({
                       <ImagePlus className="h-6 w-6 text-zinc-300" aria-hidden />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-zinc-200">Fotografía el tablero de post-its</p>
-                      <p className="mt-1 text-xs text-zinc-500">o arrastra una imagen aquí · PNG, JPG, WEBP</p>
+                      <p className="text-sm font-medium text-zinc-200">Snap the sticky-note board</p>
+                      <p className="mt-1 text-xs text-zinc-500">or drag an image here · PNG, JPG, WEBP</p>
                     </div>
                     <div className="flex w-full max-w-sm flex-col gap-2 sm:flex-row">
                       <button
@@ -222,7 +222,7 @@ export function InputSection({
                         onClick={() => cameraRef.current?.click()}
                         className="focus-ring flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
                       >
-                        <Camera className="h-4 w-4" /> Tomar foto
+                        <Camera className="h-4 w-4" /> Take photo
                       </button>
                       <button
                         type="button"
@@ -230,7 +230,7 @@ export function InputSection({
                         onClick={() => fileRef.current?.click()}
                         className="focus-ring flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 px-4 text-sm font-medium text-zinc-200 transition hover:bg-white/5"
                       >
-                        <Upload className="h-4 w-4" /> Subir archivo
+                        <Upload className="h-4 w-4" /> Upload file
                       </button>
                     </div>
                   </>
@@ -246,7 +246,7 @@ export function InputSection({
 
             <div>
               <label htmlFor="image-context" className="mb-1.5 block text-xs font-medium text-zinc-500">
-                Contexto opcional (sector, objetivo del taller…)
+                Optional context (industry, workshop goal…)
               </label>
               <input
                 id="image-context"
@@ -255,7 +255,7 @@ export function InputSection({
                 disabled={disabled}
                 maxLength={300}
                 onChange={(e) => onContextChange(e.target.value)}
-                placeholder="Ej.: Taller de innovación para retail, objetivo 2026"
+                placeholder="E.g. Retail innovation workshop, 2026 goal"
                 className="focus-ring w-full rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3 text-sm text-white placeholder:text-zinc-600"
               />
             </div>
@@ -271,7 +271,7 @@ export function InputSection({
           >
             <div className="relative">
               <label htmlFor="idea-text" className="sr-only">
-                Describe la idea
+                Describe the idea
               </label>
               <textarea
                 id="idea-text"
@@ -281,7 +281,7 @@ export function InputSection({
                 onChange={(e) => onTextChange(e.target.value)}
                 onKeyDown={onKeyDown}
                 rows={6}
-                placeholder="Describe la idea, propuesta o estrategia que quieres poner a prueba…"
+                placeholder="Describe the idea, proposal or strategy you want to stress-test…"
                 className="focus-ring w-full resize-y rounded-xl border border-white/[0.08] bg-black/40 px-4 py-3.5 text-[15px] leading-relaxed text-white placeholder:text-zinc-600"
               />
               <span className="pointer-events-none absolute bottom-3 right-3 font-mono text-[11px] text-zinc-600">
@@ -303,7 +303,7 @@ export function InputSection({
               ))}
             </div>
             <p className="hidden text-xs text-zinc-600 sm:block">
-              Atajo: <kbd className="rounded bg-white/5 px-1.5 py-0.5 font-mono">⌘/Ctrl + Enter</kbd> para analizar
+              Shortcut: <kbd className="rounded bg-white/5 px-1.5 py-0.5 font-mono">⌘/Ctrl + Enter</kbd> to analyze
             </p>
           </motion.div>
         )}

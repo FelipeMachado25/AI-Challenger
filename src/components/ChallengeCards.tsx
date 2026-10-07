@@ -27,12 +27,12 @@ const card: Variants = {
 function formatChallenge(name: string, c: ChallengeResponse): string {
   return [
     `【${name}】`,
-    `• Punto ciego: ${c.blindspot}`,
-    `• Hipótesis fatal: ${c.fatalHypothesis}`,
-    `• Preguntas incómodas:`,
+    `• Blind spot: ${c.blindspot}`,
+    `• Fatal hypothesis: ${c.fatalHypothesis}`,
+    `• Uncomfortable questions:`,
     `   1. ${c.uncomfortableQuestions[0]}`,
     `   2. ${c.uncomfortableQuestions[1]}`,
-    `• Señal de pivote: ${c.pivotSignal}`,
+    `• Pivot signal: ${c.pivotSignal}`,
   ].join("\n");
 }
 
@@ -74,7 +74,7 @@ function CopyButton({ getText, label, accent }: { getText: () => string; label: 
       ) : (
         <Copy className="h-3.5 w-3.5" />
       )}
-      {state === "copied" ? "Copiado" : state === "error" ? "Error" : "Copiar"}
+      {state === "copied" ? "Copied" : state === "error" ? "Error" : "Copy"}
     </button>
   );
 }
@@ -112,14 +112,14 @@ export function ChallengeCards({ results, totalLatencyMs, onReanalyze, loading }
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 id="results-title" className="text-sm font-semibold uppercase tracking-[0.14em] text-zinc-400">
-            3 · Tarjetas de desafío
+            3 · Challenge cards
           </h2>
           <p className="mt-1 font-mono text-xs text-zinc-600">
-            {okResults.length} visor{okResults.length === 1 ? "" : "es"} · {(totalLatencyMs / 1000).toFixed(2)}s
+            {okResults.length} lens{okResults.length === 1 ? "" : "es"} · {(totalLatencyMs / 1000).toFixed(2)}s
           </p>
         </div>
         <div className="flex gap-2">
-          {okResults.length > 0 && <CopyButton getText={allText} label="Copiar todas las tarjetas" />}
+          {okResults.length > 0 && <CopyButton getText={allText} label="Copy all cards" />}
           <button
             type="button"
             onClick={onReanalyze}
@@ -127,7 +127,7 @@ export function ChallengeCards({ results, totalLatencyMs, onReanalyze, loading }
             className="focus-ring flex min-h-[40px] items-center gap-1.5 rounded-lg bg-white px-3 text-xs font-semibold text-zinc-950 transition hover:bg-zinc-200 disabled:opacity-50"
           >
             <RefreshCw className={loading ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
-            Volver a analizar
+            Analyze again
           </button>
         </div>
       </div>
@@ -170,7 +170,7 @@ export function ChallengeCards({ results, totalLatencyMs, onReanalyze, loading }
                   {result.ok && (
                     <CopyButton
                       getText={() => formatChallenge(`${hat.emoji} ${hat.name}`, result.challenge)}
-                      label={`Copiar tarjeta de ${hat.name}`}
+                      label={`Copy ${hat.name} card`}
                       accent={hat.color}
                     />
                   )}
@@ -178,13 +178,13 @@ export function ChallengeCards({ results, totalLatencyMs, onReanalyze, loading }
 
                 {result.ok ? (
                   <div className="space-y-5 p-5 pt-2">
-                    <Section icon={Eye} title="Punto ciego" color={hat.color}>
+                    <Section icon={Eye} title="Blind spot" color={hat.color}>
                       {result.challenge.blindspot}
                     </Section>
-                    <Section icon={Skull} title="Hipótesis fatal" color={hat.color}>
+                    <Section icon={Skull} title="Fatal hypothesis" color={hat.color}>
                       {result.challenge.fatalHypothesis}
                     </Section>
-                    <Section icon={HelpCircle} title="Preguntas incómodas" color={hat.color}>
+                    <Section icon={HelpCircle} title="Uncomfortable questions" color={hat.color}>
                       <ol className="space-y-2">
                         {result.challenge.uncomfortableQuestions.map((q, i) => (
                           <li key={i} className="flex gap-3">
@@ -200,7 +200,7 @@ export function ChallengeCards({ results, totalLatencyMs, onReanalyze, loading }
                       </ol>
                     </Section>
                     <div className="rounded-xl border border-white/[0.06] bg-black/40 p-4">
-                      <Section icon={Signpost} title="Señal de pivote" color={hat.color}>
+                      <Section icon={Signpost} title="Pivot signal" color={hat.color}>
                         {result.challenge.pivotSignal}
                       </Section>
                     </div>

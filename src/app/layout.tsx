@@ -3,14 +3,14 @@ import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Challenger — Desafía tu estrategia en segundos",
+  title: "AI Challenger — Stress-test your strategy in seconds",
   description:
-    "Fotografía el tablero del taller o escribe una idea y recibe Puntos Ciegos, Hipótesis Fatales y Preguntas Incómodas desde cuatro sombreros estratégicos, impulsado por Groq.",
+    "Snap the workshop board or type an idea and get Blind Spots, Fatal Hypotheses and Uncomfortable Questions from four strategic hats, powered by Groq.",
   applicationName: "AI Challenger",
   icons: { icon: "/icon.svg" },
   openGraph: {
     title: "AI Challenger",
-    description: "Tarjetas de desafío estratégico para talleres de innovación, en menos de 2 segundos.",
+    description: "Strategic challenge cards for innovation workshops, in under 2 seconds.",
     type: "website",
   },
 };
@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className="dark">
+    <html lang="en" className="dark">
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

@@ -1,6 +1,6 @@
 import type { HatId } from "./types";
 
-/** Metadatos visuales de cada sombrero (seguros para el cliente). */
+/** Visual metadata for each hat (safe for the client). */
 export interface HatMeta {
   id: HatId;
   emoji: string;
@@ -8,7 +8,7 @@ export interface HatMeta {
   tagline: string;
   focus: string;
   color: string;
-  /** rgba del color para glows/sombras. */
+  /** rgba of the color for glows/shadows. */
   glow: string;
 }
 
@@ -16,36 +16,36 @@ export const HATS: Record<HatId, HatMeta> = {
   cynic: {
     id: "cynic",
     emoji: "🏴‍☠️",
-    name: "El Cínico",
-    tagline: "Riesgo y fricción",
-    focus: "Seguridad, adopción, finanzas y por qué fracasará.",
+    name: "The Cynic",
+    tagline: "Risk & friction",
+    focus: "Security, adoption, finances and why it will fail.",
     color: "#f43f5e",
     glow: "rgba(244, 63, 94, 0.35)",
   },
   scaler: {
     id: "scaler",
     emoji: "🚀",
-    name: "El Escalador",
-    tagline: "Crecimiento y ambición 10x",
-    focus: "Falta de escala, cómo multiplicar por 10 y romper barreras.",
+    name: "The Scaler",
+    tagline: "Growth & 10x ambition",
+    focus: "Lack of scale, how to multiply by 10 and break barriers.",
     color: "#10b981",
     glow: "rgba(16, 185, 129, 0.35)",
   },
   client: {
     id: "client",
     emoji: "👿",
-    name: "El Cliente Incómodo",
-    tagline: "Empatía y escepticismo",
-    focus: "El usuario más perezoso, tacaño y exigente. ¿Por qué pagaría?",
+    name: "The Difficult Customer",
+    tagline: "Empathy & skepticism",
+    focus: "The laziest, cheapest, most demanding user. Why would they pay?",
     color: "#a855f7",
     glow: "rgba(168, 85, 247, 0.35)",
   },
   operator: {
     id: "operator",
     emoji: "⚙️",
-    name: "El Operador Realista",
-    tagline: "Factibilidad y ejecución",
-    focus: "Complejidad técnica, dependencias, plazos y cuellos de botella.",
+    name: "The Realist Operator",
+    tagline: "Feasibility & execution",
+    focus: "Technical complexity, dependencies, timelines and bottlenecks.",
     color: "#06b6d4",
     glow: "rgba(6, 182, 212, 0.35)",
   },

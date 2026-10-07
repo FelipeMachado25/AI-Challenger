@@ -1,113 +1,108 @@
 # ⚡ AI Challenger
 
-**Desafía tu estrategia en segundos.** AI Challenger es una web app *mobile-first* sin fricción para talleres de estrategia e innovación corporativa. Los participantes **fotografían un tablero de post-its** (o escriben una idea) y la app la pasa por cuatro **Sombreros de Pensamiento** usando los modelos ultrarrápidos de [Groq](https://groq.com). Cada sombrero devuelve una **Tarjeta de Desafío**:
+**Stress-test your strategy in seconds.** AI Challenger is a zero-friction, mobile-first web app for corporate strategy and innovation workshops. Participants **snap a photo of a sticky-note board** (or type an idea), and the app runs it through four strategic **Thinking Hats** using [Groq](https://groq.com)'s ultra-fast models. Each hat returns a **Challenge Card**:
 
-| Campo | Qué es |
+| Field | What it is |
 | --- | --- |
-| 👁️ **Punto ciego** | Lo que el equipo no está viendo. |
-| 💀 **Hipótesis fatal** | La suposición no validada que, si es falsa, mata la idea. |
-| ❓ **Preguntas incómodas** | Dos preguntas para incomodar al equipo. |
-| 🪧 **Señal de pivote** | La métrica o evidencia que indicaría cambiar de rumbo. |
+| 👁️ **Blind spot** | What the team is not seeing. |
+| 💀 **Fatal hypothesis** | The unvalidated assumption that kills the idea if it's false. |
+| ❓ **Uncomfortable questions** | Two questions that put the team on the spot. |
+| 🪧 **Pivot signal** | The metric or evidence that would call for a change of direction. |
 
-## 🎩 Los 4 sombreros
+## 🎩 The 4 hats
 
-| Sombrero | Foco | Color |
+| Hat | Focus | Color |
 | --- | --- | --- |
-| 🏴‍☠️ **El Cínico** | Riesgo, seguridad, adopción, finanzas: por qué fracasará. | `#f43f5e` |
-| 🚀 **El Escalador** | Falta de escala; cómo multiplicar ×10 y romper barreras. | `#10b981` |
-| 👿 **El Cliente Incómodo** | El usuario más perezoso, tacaño y exigente. ¿Por qué pagaría? | `#a855f7` |
-| ⚙️ **El Operador Realista** | Complejidad técnica, dependencias, plazos y cuellos de botella. | `#06b6d4` |
+| 🏴‍☠️ **The Cynic** | Risk, security, adoption, finances: why it will fail. | `#f43f5e` |
+| 🚀 **The Scaler** | Lack of scale; how to 10x it and break market barriers. | `#10b981` |
+| 👿 **The Difficult Customer** | The laziest, cheapest, most demanding user. Why would they pay? | `#a855f7` |
+| ⚙️ **The Realist Operator** | Technical complexity, dependencies, timelines and bottlenecks. | `#06b6d4` |
 
-Los sombreros seleccionados se ejecutan **en paralelo**, así que el tiempo total ≈ el del sombrero más lento (normalmente < 2 s).
+Selected hats run **in parallel**, so total time ≈ the slowest hat (usually < 2 s).
 
 ## 🧱 Stack
 
-- **Next.js 15** (App Router, TypeScript estricto)
+- **Next.js 15** (App Router, strict TypeScript)
 - **Tailwind CSS**, **Framer Motion**, **Lucide React**
-- **groq-sdk**: solo se usa en el servidor
-- Visión: `meta-llama/llama-4-scout-17b-16e-instruct` · Texto: `llama-3.3-70b-versatile`
+- **groq-sdk**, used on the server only
+- Vision: `meta-llama/llama-4-scout-17b-16e-instruct` · Text: `llama-3.3-70b-versatile`
 
-> **Sobre los modelos:** Groq retiró `llama-3.2-11b/90b-vision-preview` y `mixtral-8x7b-32768`. La app tiene una **cadena de fallback** (`src/lib/groq.ts`): si un modelo está deprecado, pasa solo al siguiente. Puedes forzar otros modelos con `GROQ_TEXT_MODEL` / `GROQ_VISION_MODEL`.
+> **About models:** Groq retires models over time. The app has an automatic **fallback chain** (`src/lib/groq.ts`): if a model is decommissioned, blocked for your project, or fails, the next one is tried (`openai/gpt-oss-120b`, `llama-4-maverick`, `gpt-oss-20b`, `llama-3.1-8b-instant`…). You can force specific models with `GROQ_TEXT_MODEL` / `GROQ_VISION_MODEL`.
 
-## 🔐 Seguridad de la API Key
+## 🔐 API key security
 
-- `GROQ_API_KEY` **nunca** lleva el prefijo `NEXT_PUBLIC_`, así que no llega al navegador.
-- Toda llamada a Groq pasa por la ruta serverless `src/app/api/challenge/route.ts`. `src/lib/groq.ts` importa `server-only`, así que el build falla si alguien lo importa desde el cliente.
-- `.env.local` y el resto de archivos `.env*` están en `.gitignore`.
-- Si falta la clave, la API responde **HTTP 401** (`MISSING_API_KEY`) y la interfaz muestra un modal con los pasos para configurarla. Si Groq rechaza la clave, responde 401 `INVALID_API_KEY`.
-- `GET /api/challenge` solo indica `{"configured": true|false}` (lo usa el indicador de conexión), sin exponer la clave.
-- El servidor valida el payload: tipo de imagen, tamaño, longitud del texto y sombreros válidos.
+- `GROQ_API_KEY` **never** uses the `NEXT_PUBLIC_` prefix, so it never reaches the browser.
+- Every Groq call goes through the serverless route `src/app/api/challenge/route.ts`. `src/lib/groq.ts` imports `server-only`, so the build fails if anything imports it from the client.
+- `.env.local` and all `.env*` files are in `.gitignore`.
+- If the key is missing, the API returns **HTTP 401** (`MISSING_API_KEY`) and the UI shows a modal with setup steps. If Groq rejects the key, it returns 401 `INVALID_API_KEY`.
+- `GET /api/challenge` only reports `{"configured": true|false}` (used by the connection indicator) and never exposes the key.
+- The server validates the payload: image type, size, text length and valid hats.
 
-## 🔑 1. Obtener una API Key gratuita de Groq
+## 🔑 1. Get a free Groq API key
 
-1. Entra en **[console.groq.com](https://console.groq.com)** e inicia sesión (Google/GitHub/email).
-2. Ve a **API Keys** → **[Create API Key](https://console.groq.com/keys)**.
-3. Ponle un nombre (p. ej. `ai-challenger`) y copia la clave (`gsk_…`). Solo se muestra una vez.
+1. Go to **[console.groq.com](https://console.groq.com)** and sign in.
+2. Open **API Keys** → **[Create API Key](https://console.groq.com/keys)**.
+3. Name it (e.g. `ai-challenger`) and copy the key (`gsk_…`). It is shown only once.
 
-## 💻 2. Desarrollo local
+## 💻 2. Local development
 
-Requisitos: **Node.js 18.18+** (recomendado 20 o 22).
+Requirements: **Node.js 18.18+** (20 or 22 recommended).
 
 ```bash
 git clone https://github.com/felipemachado25/ai-challenger.git
 cd ai-challenger
 npm install
-cp .env.example .env.local      # y pega tu clave en GROQ_API_KEY
+cp .env.example .env.local      # then paste your key into GROQ_API_KEY
 npm run dev
 ```
 
-Abre <http://localhost:3000>. Para probarlo desde el móvil en la misma red Wi-Fi: `npm run dev -- -H 0.0.0.0` y abre `http://<IP-de-tu-PC>:3000`. Nota: la cámara directa requiere HTTPS en algunos navegadores; en producción (Vercel) funciona siempre.
+Open <http://localhost:3000>. To try it from your phone on the same Wi-Fi network: `npm run dev -- -H 0.0.0.0` and open `http://<your-computer-IP>:3000`. Some browsers only allow direct camera capture over HTTPS; on Vercel it always works.
 
 ### Scripts
 
-| Comando | Descripción |
+| Command | Description |
 | --- | --- |
-| `npm run dev` | Servidor de desarrollo |
-| `npm run build` | Build de producción |
-| `npm run start` | Sirve el build de producción |
-| `npm run lint` | ESLint (0 warnings permitidos) |
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint (0 warnings allowed) |
 | `npm run typecheck` | `tsc --noEmit` |
 
-## 🚀 3. Deploy en Vercel (desde GitHub)
+## 🚀 3. Deploy to Vercel (from GitHub)
 
-1. Sube el repositorio a GitHub (ya está en `felipemachado25/ai-challenger`).
-2. Entra en **[vercel.com/new](https://vercel.com/new)** e inicia sesión con GitHub.
-3. En **Import Git Repository**, elige `ai-challenger` → **Import**. Vercel detecta Next.js solo; no cambies los comandos.
-4. Despliega **Environment Variables** y añade:
+1. Go to **[vercel.com/new](https://vercel.com/new)** and sign in with GitHub.
+2. Under **Import Git Repository**, pick `ai-challenger` → **Import**. Vercel detects Next.js automatically; leave the commands as they are.
+3. Expand **Environment Variables** and add:
    - **Key:** `GROQ_API_KEY`
-   - **Value:** tu clave `gsk_…`
-   - Entornos: Production, Preview y Development
-5. Pulsa **Deploy**. En ~1 minuto tendrás una URL `https://ai-challenger-xxxx.vercel.app`.
-6. A partir de ahí, **cada `git push` a `main` redespliega producción** y cada rama o PR genera una URL de preview.
+   - **Value:** your `gsk_…` key
+   - Environments: Production, Preview and Development
+4. Click **Deploy**. In about a minute you'll have a URL like `https://ai-challenger-xxxx.vercel.app`.
+5. From then on, **every `git push` to `main` redeploys production**, and every branch or PR gets a preview URL.
 
-> ¿Ya desplegaste sin la clave? Añádela en **Project → Settings → Environment Variables** y luego **Deployments → ⋯ → Redeploy**. Las variables solo se aplican en despliegues nuevos.
+> Deployed before adding the key? Add it under **Project → Settings → Environment Variables**, then **Deployments → ⋯ → Redeploy**. Variables only apply to new deployments.
 
-### Botón de deploy en un clic
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffelipemachado25%2Fai-challenger&env=GROQ_API_KEY&envDescription=API%20Key%20gratuita%20de%20console.groq.com&envLink=https%3A%2F%2Fconsole.groq.com%2Fkeys)
-
-## 🗂️ Estructura
+## 🗂️ Structure
 
 ```
 src/
 ├── app/
-│   ├── api/challenge/route.ts   # Ruta serverless segura (Groq)
-│   ├── layout.tsx               # Tema oscuro global y metadata
-│   └── page.tsx                 # Dashboard del taller
+│   ├── api/challenge/route.ts   # Secure serverless route (Groq)
+│   ├── layout.tsx               # Global dark theme & metadata
+│   └── page.tsx                 # Workshop dashboard
 ├── components/
-│   ├── Header.tsx               # Branding y estado de conexión
-│   ├── InputSection.tsx         # Cámara / drag-and-drop / texto
-│   ├── LensSelector.tsx         # Selector de sombreros
-│   ├── ChallengeCards.tsx       # Tarjetas animadas + copiar / re-analizar
-│   ├── ApiKeyWarning.tsx        # Modal si falta o falla la API Key
-│   └── Loader.tsx               # Indicador de procesamiento
+│   ├── Header.tsx               # Branding & connection status
+│   ├── InputSection.tsx         # Camera / drag-and-drop / text
+│   ├── LensSelector.tsx         # Hat selector
+│   ├── ChallengeCards.tsx       # Animated cards + copy / analyze again
+│   ├── ApiKeyWarning.tsx        # Modal when the API key is missing or invalid
+│   └── Loader.tsx               # Processing indicator
 ├── lib/
-│   ├── groq.ts                  # Cliente Groq, prompts, fallback de modelos (server-only)
-│   ├── hats.ts                  # Metadatos visuales de los sombreros
-│   ├── image.ts                 # Compresión de imágenes en el navegador
-│   ├── types.ts                 # Tipos y validadores compartidos
+│   ├── groq.ts                  # Groq client, prompts, model fallback (server-only)
+│   ├── hats.ts                  # Hat visual metadata
+│   ├── image.ts                 # In-browser image compression
+│   ├── types.ts                 # Shared types and validators
 │   └── utils.ts                 # cn() (clsx + tailwind-merge)
-└── styles/globals.css           # Tailwind y estilos base
+└── styles/globals.css           # Tailwind & base styles
 ```
 
 ## 🔌 API
@@ -115,13 +110,13 @@ src/
 `POST /api/challenge`
 
 ```jsonc
-// Texto
-{ "mode": "text", "hats": ["cynic", "client"], "text": "Tu idea…" }
-// Imagen (data URL Base64, comprimida en el cliente a ≤1600px JPEG)
-{ "mode": "image", "hats": ["operator"], "image": "data:image/jpeg;base64,…", "text": "contexto opcional" }
+// Text
+{ "mode": "text", "hats": ["cynic", "client"], "text": "Your idea…" }
+// Image (Base64 data URL, compressed client-side to ≤1600px JPEG)
+{ "mode": "image", "hats": ["operator"], "image": "data:image/jpeg;base64,…", "text": "optional context" }
 ```
 
-Respuesta `200`:
+`200` response:
 
 ```json
 {
@@ -143,10 +138,10 @@ Respuesta `200`:
 }
 ```
 
-Errores: `400 BAD_REQUEST`, `401 MISSING_API_KEY | INVALID_API_KEY`, `413 PAYLOAD_TOO_LARGE`, `429 RATE_LIMITED`, `502 UPSTREAM_ERROR`, `500 INTERNAL_ERROR`, todos con el formato `{ "error": { "code", "message" } }`.
+Errors: `400 BAD_REQUEST`, `401 MISSING_API_KEY | INVALID_API_KEY`, `413 PAYLOAD_TOO_LARGE`, `429 RATE_LIMITED`, `502 UPSTREAM_ERROR`, `500 INTERNAL_ERROR`, all shaped as `{ "error": { "code", "message" } }`.
 
-## 🛠️ Solución de problemas
+## 🛠️ Troubleshooting
 
-- **"Falta API Key" en Vercel:** añade la variable y haz **Redeploy**.
-- **Error de modelo / 502:** Groq pudo haber retirado un modelo. Revisa [console.groq.com/docs/models](https://console.groq.com/docs/models) y define `GROQ_TEXT_MODEL` / `GROQ_VISION_MODEL`.
-- **Fotos HEIC (iPhone):** Safari las convierte solas; si otro navegador falla, usa JPG/PNG.
+- **"API key missing" on Vercel:** add the variable and **Redeploy**.
+- **"Groq error …" on a card:** the card shows Groq's exact message. Check **Vercel → Project → Logs** for `[groq]` lines showing which models were tried. If models are blocked, enable them at [console.groq.com/settings/limits](https://console.groq.com/settings/limits) or set `GROQ_TEXT_MODEL` / `GROQ_VISION_MODEL`.
+- **HEIC photos (iPhone):** Safari converts them automatically; if another browser fails, use JPG/PNG.

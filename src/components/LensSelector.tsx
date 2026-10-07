@@ -20,7 +20,7 @@ export function LensSelector({ selected, onChange, disabled }: LensSelectorProps
     if (selected.includes(id)) {
       onChange(selected.filter((h) => h !== id));
     } else {
-      // Mantener el orden canónico de los sombreros.
+      // Keep the canonical hat order.
       onChange(HAT_LIST.map((h) => h.id).filter((h) => h === id || selected.includes(h)));
     }
   };
@@ -29,7 +29,7 @@ export function LensSelector({ selected, onChange, disabled }: LensSelectorProps
     <section className="panel p-4 sm:p-6" aria-labelledby="lens-title">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 id="lens-title" className="text-sm font-semibold uppercase tracking-[0.14em] text-zinc-400">
-          2 · Elige los sombreros
+          2 · Choose your hats
         </h2>
         <button
           type="button"
@@ -37,11 +37,11 @@ export function LensSelector({ selected, onChange, disabled }: LensSelectorProps
           onClick={() => onChange(allSelected ? [] : HAT_LIST.map((h) => h.id))}
           className="focus-ring rounded-lg px-2 py-1 text-xs font-medium text-zinc-400 transition hover:text-white"
         >
-          {allSelected ? "Ninguno" : "Todos"}
+          {allSelected ? "None" : "All"}
         </button>
       </div>
 
-      <div role="group" aria-label="Sombreros estratégicos" className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
+      <div role="group" aria-label="Strategic hats" className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
         {HAT_LIST.map((hat) => {
           const active = selected.includes(hat.id);
           return (

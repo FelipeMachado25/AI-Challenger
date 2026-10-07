@@ -46,7 +46,7 @@ export function ApiKeyWarning({ open, variant, message, onClose, onRetry }: ApiK
               type="button"
               onClick={onClose}
               className="focus-ring absolute right-4 top-4 rounded-full p-2 text-zinc-400 transition hover:bg-white/5 hover:text-white"
-              aria-label="Cerrar"
+              aria-label="Close"
             >
               <X className="h-4 w-4" />
             </button>
@@ -56,18 +56,18 @@ export function ApiKeyWarning({ open, variant, message, onClose, onRetry }: ApiK
             </div>
 
             <h2 id="apikey-title" className="text-xl font-semibold text-white">
-              {variant === "missing" ? "Falta configurar la API Key de Groq" : "La API Key de Groq no es válida"}
+              {variant === "missing" ? "The Groq API key is not configured" : "The Groq API key is not valid"}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-zinc-400">
               {message ??
-                "El servidor necesita la variable GROQ_API_KEY para analizar. La clave nunca se envía al navegador."}
+                "The server needs the GROQ_API_KEY variable to run analyses. The key is never sent to the browser."}
             </p>
 
             <ol className="mt-6 space-y-3 text-sm text-zinc-300">
               <li className="flex gap-3">
                 <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/5 font-mono text-xs">1</span>
                 <span>
-                  Crea una clave gratuita en{" "}
+                  Create a free key at{" "}
                   <a
                     href="https://console.groq.com/keys"
                     target="_blank"
@@ -81,9 +81,9 @@ export function ApiKeyWarning({ open, variant, message, onClose, onRetry }: ApiK
               <li className="flex gap-3">
                 <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/5 font-mono text-xs">2</span>
                 <span>
-                  <strong className="text-white">Local:</strong> añádela a{" "}
-                  <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs">.env.local</code> como{" "}
-                  <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs">GROQ_API_KEY=gsk_…</code> y reinicia{" "}
+                  <strong className="text-white">Local:</strong> add it to{" "}
+                  <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs">.env.local</code> as{" "}
+                  <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs">GROQ_API_KEY=gsk_…</code> and restart{" "}
                   <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs">npm run dev</code>.
                 </span>
               </li>
@@ -91,7 +91,7 @@ export function ApiKeyWarning({ open, variant, message, onClose, onRetry }: ApiK
                 <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/5 font-mono text-xs">3</span>
                 <span>
                   <strong className="text-white">Vercel:</strong> Project → Settings → Environment Variables →{" "}
-                  <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs">GROQ_API_KEY</code>, y vuelve a desplegar.
+                  <code className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-xs">GROQ_API_KEY</code>, then redeploy.
                 </span>
               </li>
             </ol>
@@ -102,7 +102,7 @@ export function ApiKeyWarning({ open, variant, message, onClose, onRetry }: ApiK
                 onClick={onClose}
                 className="focus-ring rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-zinc-300 transition hover:bg-white/5"
               >
-                Entendido
+                Got it
               </button>
               {onRetry && (
                 <button
@@ -110,7 +110,7 @@ export function ApiKeyWarning({ open, variant, message, onClose, onRetry }: ApiK
                   onClick={onRetry}
                   className="focus-ring rounded-xl bg-rose-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_24px_rgba(244,63,94,0.45)] transition hover:bg-rose-400"
                 >
-                  Volver a verificar
+                  Check again
                 </button>
               )}
             </div>
