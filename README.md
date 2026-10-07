@@ -18,7 +18,7 @@
 | 👿 **The Difficult Customer** | The laziest, cheapest, most demanding user. Why would they pay? | `#a855f7` |
 | ⚙️ **The Realist Operator** | Technical complexity, dependencies, timelines and bottlenecks. | `#06b6d4` |
 
-Selected hats run **in parallel**, so total time ≈ the slowest hat (usually < 2 s).
+In text mode the selected hats run **in parallel**, so total time ≈ the slowest hat (usually < 2 s). In photo mode all hats are answered in **one request**, so the image's tokens are only paid once (important on Groq's free tier).
 
 ## 🧱 Stack
 
@@ -112,7 +112,7 @@ src/
 ```jsonc
 // Text
 { "mode": "text", "hats": ["cynic", "client"], "text": "Your idea…" }
-// Image (Base64 data URL, compressed client-side to ≤1600px JPEG)
+// Image (Base64 data URL, compressed client-side to ≤1280px JPEG)
 { "mode": "image", "hats": ["operator"], "image": "data:image/jpeg;base64,…", "text": "optional context" }
 ```
 
@@ -144,4 +144,5 @@ Errors: `400 BAD_REQUEST`, `401 MISSING_API_KEY | INVALID_API_KEY`, `413 PAYLOAD
 
 - **"API key missing" on Vercel:** add the variable and **Redeploy**.
 - **"Groq error …" on a card:** the card shows Groq's exact message. Check **Vercel → Project → Logs** for `[groq]` lines showing which models were tried. If models are blocked, enable them at [console.groq.com/settings/limits](https://console.groq.com/settings/limits) or set `GROQ_TEXT_MODEL` / `GROQ_VISION_MODEL`.
+- **"Groq's rate limit … was reached":** the free tier allows ~7,000 input tokens per minute per model. A photo costs ~1,500 tokens. Wait the seconds shown, select fewer hats, or upgrade at [console.groq.com/settings/billing](https://console.groq.com/settings/billing).
 - **HEIC photos (iPhone):** Safari converts them automatically; if another browser fails, use JPG/PNG.

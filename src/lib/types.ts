@@ -70,7 +70,7 @@ export const LIMITS = {
   maxTextChars: 4000,
   /** Max Base64 data URL size (Groq accepts up to ~4 MB in base64). */
   maxImageDataUrlBytes: 3_800_000,
-  maxImageDimension: 1600,
+  maxImageDimension: 1280,
 } as const;
 
 /** Type guard that validates the model response. */
