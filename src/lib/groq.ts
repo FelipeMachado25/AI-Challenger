@@ -67,7 +67,8 @@ export function getGroqClient(): Groq {
   const apiKey = readApiKey();
   if (!apiKey) throw new MissingApiKeyError();
   if (!cachedClient || cachedKey !== apiKey) {
-    cachedClient = new Groq({ apiKey, timeout: 25_000, maxRetries: 0 }) // fallback is handled in completeWithFallback;
+    // Fallback across models is handled in completeWithFallback, so no SDK retries.
+    cachedClient = new Groq({ apiKey, timeout: 25_000, maxRetries: 0 });
     cachedKey = apiKey;
   }
   return cachedClient;
