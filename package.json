@@ -2,6 +2,14 @@
   "name": "ai-challenger",
   "version": "1.0.0",
   "private": true,
+  "description": "Stress-test your strategy in seconds: snap a sticky-note board or type an idea and get Blind Spots, Fatal Hypotheses and Uncomfortable Questions from four strategic Thinking Hats, powered by Groq.",
+  "homepage": "https://ai-challenger.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FelipeMachado25/AI-Challenger.git"
+  },
+  "license": "MIT",
+  "author": "Felipe Machado",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
