@@ -18,15 +18,17 @@ import { isChallengeResponse, type ChallengeResponse, type HatId, type InputMode
 const DEFAULT_TEXT_MODELS = [
   "llama-3.3-70b-versatile",
   "openai/gpt-oss-120b",
-  "meta-llama/llama-4-maverick-17b-128e-instruct",
   "openai/gpt-oss-20b",
+  "qwen/qwen3.8-27b",
   "llama-3.1-8b-instant",
 ];
+// Groq retired the Llama 3.2 vision previews (Apr 2025) and Llama 4 Scout (Jul 2026).
+// Qwen 3.x is Groq's current vision model; the retired ones stay as a last resort.
 const DEFAULT_VISION_MODELS = [
-  "meta-llama/llama-4-scout-17b-16e-instruct",
+  "qwen/qwen3.8-27b",
+  "qwen/qwen3.6-27b",
   "meta-llama/llama-4-maverick-17b-128e-instruct",
-  "llama-3.2-90b-vision-preview",
-  "llama-3.2-11b-vision-preview",
+  "meta-llama/llama-4-scout-17b-16e-instruct",
 ];
 
 function modelChain(mode: InputMode): string[] {
@@ -206,7 +208,7 @@ function isJsonModeError(error: unknown): boolean {
 
 /** Short, human-readable description of a Groq error (never contains the API key). */
 export function describeGroqError(error: unknown): string {
-  if (error instanceof InvalidModelOutputError) return error.message;
+  if (error instanceof InvalidModelOutputError || error instanceof NoModelAvailableError) return error.message;
   if (error instanceof Groq.APIConnectionTimeoutError) return "Groq took too long to respond.";
   if (error instanceof Groq.APIConnectionError) return "Could not connect to Groq.";
   if (error instanceof Groq.APIError) {
@@ -248,11 +250,13 @@ async function completeOnce(
   jsonMode: boolean,
 ): Promise<string> {
   const isReasoningModel = model.startsWith("openai/gpt-oss");
+  // Qwen 3.x may "think" before answering; give it room (the parser strips <think> blocks).
+  const isThinkingModel = model.startsWith("qwen/");
   const completion = await client.chat.completions.create({
     model,
     messages,
     temperature: 0.6,
-    max_completion_tokens: isReasoningModel ? 2048 : 900,
+    max_completion_tokens: isReasoningModel || isThinkingModel ? 2048 : 900,
     ...(isReasoningModel ? { reasoning_effort: "low" as const, include_reasoning: false } : {}),
     ...(jsonMode ? { response_format: { type: "json_object" as const } } : {}),
   });
@@ -276,6 +280,7 @@ export async function runHat(client: Groq, input: RunHatInput): Promise<RunHatOu
   const preferred = workingModel[input.mode];
   const models = preferred ? [preferred, ...chain.filter((m) => m !== preferred)] : chain;
 
+  const errors: unknown[] = [];
   let lastError: unknown = null;
 
   for (const model of models) {
@@ -294,6 +299,7 @@ export async function runHat(client: Groq, input: RunHatInput): Promise<RunHatOu
         if (isFatalGroqError(error)) throw error;
         console.error(`[groq] model=${model} hat=${input.hatId} attempt=${attempt}:`, describeGroqError(error));
         lastError = error;
+        errors.push(error);
         if (jsonMode && isJsonModeError(error)) {
           jsonMode = false;
           continue;
@@ -304,5 +310,27 @@ export async function runHat(client: Groq, input: RunHatInput): Promise<RunHatOu
     }
   }
 
+  // Report the most useful error: a "model retired / not found" error from the
+  // end of the chain hides the real reason the earlier models failed.
+  const informative = errors.find((e) => !isModelGoneError(e));
+  if (informative) throw informative;
+  if (errors.length > 0) throw new NoModelAvailableError(input.mode);
   throw lastError ?? new Error("No Groq model responded.");
+}
+
+function isModelGoneError(error: unknown): boolean {
+  if (!(error instanceof Groq.APIError)) return false;
+  if (error.status === 404) return true;
+  const message = error.message.toLowerCase();
+  return message.includes("decommissioned") || message.includes("does not exist") || message.includes("no longer supported");
+}
+
+export class NoModelAvailableError extends Error {
+  constructor(mode: InputMode) {
+    const envVar = mode === "image" ? "GROQ_VISION_MODEL" : "GROQ_TEXT_MODEL";
+    super(
+      `None of the default Groq ${mode === "image" ? "vision" : "text"} models are available anymore. Pick a current model at console.groq.com/docs/models and set it as ${envVar} in Vercel, then redeploy.`,
+    );
+    this.name = "NoModelAvailableError";
+  }
 }

@@ -25,9 +25,9 @@ Selected hats run **in parallel**, so total time ≈ the slowest hat (usually < 
 - **Next.js 15** (App Router, strict TypeScript)
 - **Tailwind CSS**, **Framer Motion**, **Lucide React**
 - **groq-sdk**, used on the server only
-- Vision: `meta-llama/llama-4-scout-17b-16e-instruct` · Text: `llama-3.3-70b-versatile`
+- Vision: `qwen/qwen3.8-27b` · Text: `llama-3.3-70b-versatile`
 
-> **About models:** Groq retires models over time. The app has an automatic **fallback chain** (`src/lib/groq.ts`): if a model is decommissioned, blocked for your project, or fails, the next one is tried (`openai/gpt-oss-120b`, `llama-4-maverick`, `gpt-oss-20b`, `llama-3.1-8b-instant`…). You can force specific models with `GROQ_TEXT_MODEL` / `GROQ_VISION_MODEL`.
+> **About models:** Groq retires models over time. The app has an automatic **fallback chain** (`src/lib/groq.ts`): if a model is decommissioned, blocked for your project, or fails, the next one is tried (text: `openai/gpt-oss-120b`, `gpt-oss-20b`, `qwen/qwen3.8-27b`…; vision: `qwen/qwen3.6-27b`…). You can force specific models with `GROQ_TEXT_MODEL` / `GROQ_VISION_MODEL`.
 
 ## 🔐 API key security
 
